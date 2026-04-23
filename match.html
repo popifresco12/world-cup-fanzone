@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta data-i18n-title="meta.match_title">
+  <title>Match Details | FanZone 2026</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="navbar" id="navbar"></nav>
+
+  <section class="match-hero" id="matchHero"></section>
+
+  <section class="section">
+    <div class="container">
+      <div class="detail-grid">
+        <div class="detail-col">
+          <!-- Rivalry -->
+          <div class="detail-card" style="margin-bottom:1.5rem;">
+            <h3><span class="icon">⚔️</span> <span data-i18n="match_detail.rivalry_title">The Rivalry</span></h3>
+            <div id="rivalryContent"></div>
+          </div>
+          <!-- Football History -->
+          <div class="detail-card" style="margin-bottom:1.5rem;">
+            <h3><span class="icon">⚽</span> <span data-i18n="match_detail.football_history">Football History</span></h3>
+            <ul class="history-list" id="historyList"></ul>
+          </div>
+          <!-- Political Context -->
+          <div class="detail-card">
+            <h3><span class="icon">🌍</span> <span data-i18n="match_detail.political_title">Political Context</span></h3>
+            <p id="politicalText" style="font-size:0.9rem;color:var(--text-muted);line-height:1.7;"></p>
+          </div>
+        </div>
+
+        <div class="detail-col">
+          <!-- AI Venue -->
+          <div class="venue-card" style="margin-bottom:1.5rem;">
+            <div class="ai-badge" data-i18n="match_detail.ai_picked">AI Selected</div>
+            <h4 id="venueName"></h4>
+            <div class="venue-meta" id="venueMeta"></div>
+            <p id="venueJustification" class="venue-justification"></p>
+            <div class="venue-alts">
+              <h5 data-i18n="match_detail.alternatives">Alternatives</h5>
+              <div id="venueAlts"></div>
+            </div>
+          </div>
+          <!-- Wars -->
+          <div class="detail-card" id="warsCard" style="display:none;">
+            <h3><span class="icon">💥</span> <span data-i18n="match_detail.wars_title">Historical Conflicts</span></h3>
+            <div id="warsList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" id="footer"></footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/data.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const matchId = params.get('id');
+    const match = WC2026.getMatch(matchId);
+
+    if (!match) {
+      document.body.innerHTML = '<div style="padding:10rem 2rem;text-align:center;"><h1>Match not found</h1><a href="index.html">← Back</a></div>';
+    }
+
+    function renderMatchHero() {
+      const stadium = WC2026.stadiums[match.stadium];
+      const kickoff = new Date(`${match.date}T${match.time}:00`);
+      const fanzone = new Date(kickoff.getTime() - 4 * 60 * 60 * 1000);
+      document.getElementById('matchHero').innerHTML = `
+        <a href="index.html" class="back-link">← <span data-i18n="match_detail.back">All Matches</span></a>
+        <div class="match-hero-teams">
+          <div class="match-hero-team">
+            <span class="flag">${match.home.flag}</span>
+            <h2>${match.home.name}</h2>
+            <span class="conf">${match.home.conf} · FIFA Rank #${match.home.rank}</span>
+          </div>
+          <div class="match-hero-vs">VS</div>
+          <div class="match-hero-team">
+            <span class="flag">${match.away.flag}</span>
+            <h2>${match.away.name}</h2>
+            <span class="conf">${match.away.conf} · FIFA Rank #${match.away.rank}</span>
+          </div>
+        </div>
+        <div class="match-hero-info">
+          <span>📅 ${new Date(match.date + 'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</span>
+          <span>⚽ ${match.time} ${match.timezone}</span>
+          <span>🏟 ${stadium.name}, ${stadium.city}</span>
+          <span>👥 ${stadium.capacity.toLocaleString()} capacity</span>
+        </div>
+        <div style="margin-top:1rem;">
+          <span style="display:inline-block;background:rgba(0,208,132,0.15);border:1px solid rgba(0,208,132,0.3);color:var(--accent);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;">
+            🍺 FanZone starts ${fanzone.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})} ${match.timezone} — 4 hours before kickoff
+          </span>
+        </div>
+        <div class="countdown" id="countdown"></div>
+      `;
+      startCountdown(kickoff);
+    }
+
+    function startCountdown(target) {
+      const el = document.getElementById('countdown');
+      function tick() {
+        const diff = target - Date.now();
+        if (diff <= 0) { el.innerHTML = '<div style="color:var(--accent);font-weight:700;">MATCH STARTED</div>'; return; }
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        el.innerHTML = `
+          <div class="countdown-box"><div class="num">${d}</div><div class="label">Days</div></div>
+          <div class="countdown-box"><div class="num">${h}</div><div class="label">Hours</div></div>
+          <div class="countdown-box"><div class="num">${m}</div><div class="label">Mins</div></div>
+          <div class="countdown-box"><div class="num">${s}</div><div class="label">Secs</div></div>
+        `;
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    function renderRivalry() {
+      const r = match.rivalry;
+      const levels = ['','Friendly','Spicy','Heated','Bitter','Explosive'];
+      const levelClass = r.level >= 4 ? 'extreme' : r.level >= 3 ? 'high' : 'medium';
+      let html = `
+        <div class="rivalry-level ${levelClass}">${levels[r.level]} Rivalry</div>
+        <div class="rivalry-meter">
+          ${[1,2,3,4,5].map(i => `<div class="rivalry-bar ${i <= r.level ? 'fill' : ''}"></div>`).join('')}
+        </div>
+        <p style="font-size:0.95rem;line-height:1.7;margin-bottom:1rem;">${r.summary}</p>
+      `;
+      if (r.fun_fact) {
+        html += `<div class="fun-fact"><strong>💡 Did You Know?</strong> ${r.fun_fact}</div>`;
+      }
+      document.getElementById('rivalryContent').innerHTML = html;
+    }
+
+    function renderWars() {
+      if (!match.rivalry.wars || match.rivalry.wars.length === 0) return;
+      document.getElementById('warsCard').style.display = 'block';
+      document.getElementById('warsList').innerHTML = match.rivalry.wars.map(w => `
+        <div class="war-item">
+          <h4>${w.name}</h4>
+          <p>${w.years} — ${w.outcome}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('historyList');
+      if (!match.rivalry.football_history || match.rivalry.football_history.length === 0) {
+        list.innerHTML = '<li style="color:var(--text-muted);">No competitive history yet — this could be the first chapter.</li>';
+        return;
+      }
+      list.innerHTML = match.rivalry.football_history.map(h => `
+        <li><span class="year">${h.year}</span><span>${h.event}</span></li>
+      `).join('');
+    }
+
+    function renderPolitical() {
+      document.getElementById('politicalText').textContent = match.rivalry.political || 'No significant political tensions between these nations.';
+    }
+
+    function renderVenue() {
+      const pick = WC2026.pickVenue(match);
+      if (!pick) {
+        document.querySelector('.venue-card').innerHTML = '<p>No venues available for this city yet.</p>';
+        return;
+      }
+      const v = pick.venue;
+      document.getElementById('venueName').textContent = v.name;
+      document.getElementById('venueMeta').innerHTML = `
+        <span>📍 ${v.city}</span>
+        <span>🏷 ${v.type}</span>
+        <span>👥 ${v.capacity}</span>
+        <span>⭐ ${v.rating}</span>
+        <span>📏 ${v.distance.toFixed(1)} km</span>
+      `;
+      document.getElementById('venueJustification').innerHTML = `🤖 <strong>AI:</strong> "${pick.justification}"`;
+      document.getElementById('venueAlts').innerHTML = pick.alternatives.map(a => `
+        <div class="venue-alt">
+          <span>${a.name}</span>
+          <span style="color:var(--text-muted);">⭐ ${a.rating} · ${a.distance.toFixed(1)} km</span>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!match) return;
+      renderMatchHero();
+      renderRivalry();
+      renderWars();
+      renderHistory();
+      renderPolitical();
+      renderVenue();
+      I18N.apply();
+    });
+  </script>
+</body>
+</html>

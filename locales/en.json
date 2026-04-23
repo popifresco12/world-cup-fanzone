@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "index_title": "FanZone 2026 — Pre-Match Fan Gatherings | World Cup USA/Canada/Mexico",
+    "match_title": "Match Details | FanZone 2026"
+  },
+  "nav": {
+    "matches": "Matches",
+    "about": "About"
+  },
+  "hero": {
+    "badge": "World Cup 2026",
+    "title": "Where Rivalries",
+    "title_highlight": "Meet Before Kickoff",
+    "subtitle": "AI-curated fan gatherings 4 hours before every World Cup match. Find your tribe. Feel the tension.",
+    "stat_matches": "Matches",
+    "stat_cities": "Cities",
+    "stat_fans": "Expected Fans"
+  },
+  "matches": {
+    "heading": "All Matches",
+    "subheading": "Click any match to see rivalry deep-dive, AI venue pick, and countdown.",
+    "vs": "VS",
+    "group": "Group",
+    "stadium": "Stadium",
+    "kickoff": "Kickoff",
+    "rivalry": "Rivalry",
+    "rivalry_levels": {
+      "1": "Friendly",
+      "2": "Spicy",
+      "3": "Heated",
+      "4": "Bitter",
+      "5": "Explosive"
+    }
+  },
+  "match_detail": {
+    "back": "All Matches",
+    "countdown_title": "Kickoff In",
+    "fanzone_title": "Pre-Match FanZone",
+    "fanzone_subtitle": "Recommended gathering 4 hours before kickoff",
+    "ai_picked": "AI Selected",
+    "venue_type": "Type",
+    "venue_capacity": "Capacity",
+    "venue_distance": "Distance",
+    "venue_vibe": "Vibe",
+    "alternatives": "Alternatives",
+    "rivalry_title": "The Rivalry",
+    "wars_title": "Historical Conflicts",
+    "political_title": "Political Context",
+    "football_history": "Football History",
+    "fun_fact": "Did You Know?"
+  },
+  "footer": {
+    "text": "FanZone 2026 — Unofficial fan gatherings. Not affiliated with FIFA."
+  }
+}

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta data-i18n-title="meta.index_title">
+  <title>FanZone 2026 — Pre-Match Fan Gatherings</title>
+  <meta name="description" content="AI-curated fan gatherings 4 hours before every World Cup 2026 match. Rivalry deep-dives, venue picks, and countdowns.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="navbar" id="navbar"></nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge" data-i18n="hero.badge">World Cup 2026</div>
+      <h1 data-i18n="hero.title">Where Rivalries <span data-i18n="hero.title_highlight">Meet Before Kickoff</span></h1>
+      <p data-i18n="hero.subtitle">AI-curated fan gatherings 4 hours before every World Cup match. Find your tribe. Feel the tension.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num">104</div><div class="label" data-i18n="hero.stat_matches">Matches</div></div>
+        <div class="hero-stat"><div class="num">16</div><div class="label" data-i18n="hero.stat_cities">Cities</div></div>
+        <div class="hero-stat"><div class="num">5M+</div><div class="label" data-i18n="hero.stat_fans">Expected Fans</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MATCHES ===== -->
+  <section class="section" id="matches">
+    <div class="container">
+      <div class="section-header">
+        <h2 data-i18n="matches.heading">All Matches</h2>
+        <p data-i18n="matches.subheading">Click any match to see rivalry deep-dive, AI venue pick, and countdown.</p>
+      </div>
+      <div class="date-tabs" id="dateTabs"></div>
+      <div class="matches-grid" id="matchesGrid"></div>
+    </div>
+  </section>
+
+  <footer class="footer" id="footer"></footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/data.js"></script>
+  <script>
+    const RVAL_LABELS = { 1: 'Friendly', 2: 'Spicy', 3: 'Heated', 4: 'Bitter', 5: 'Explosive' };
+    const RVAL_CLASSES = { 1: 'mild', 2: 'mild', 3: 'warm', 4: 'hot', 5: 'hot' };
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+
+    function renderTabs() {
+      const tabs = document.getElementById('dateTabs');
+      const dates = WC2026.getAllDates();
+      tabs.innerHTML = dates.map((date, i) => `
+        <button class="date-tab ${i === 0 ? 'active' : ''}" data-date="${date}" onclick="filterDate('${date}', this)">
+          <span class="day">${formatDate(date)}</span>
+        </button>
+      `).join('');
+    }
+
+    function filterDate(date, btn) {
+      document.querySelectorAll('.date-tab').forEach(t => t.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderMatches(date);
+    }
+
+    function renderMatches(dateFilter) {
+      const grid = document.getElementById('matchesGrid');
+      const matches = dateFilter ? WC2026.getMatchesByDate(dateFilter) : WC2026.matches;
+      grid.innerHTML = matches.map(m => {
+        const stadium = WC2026.stadiums[m.stadium];
+        const rLabel = RVAL_LABELS[m.rivalry.level] || 'Friendly';
+        const rClass = RVAL_CLASSES[m.rivalry.level] || 'mild';
+        return `
+          <a href="match.html?id=${m.id}" class="match-card">
+            <div class="match-date">
+              <span>${formatDate(m.date)} · ${m.time} ${m.timezone}</span>
+              <span class="group-badge">${m.group}</span>
+            </div>
+            <div class="match-teams">
+              <div class="team-side">
+                <span class="team-flag">${m.home.flag}</span>
+                <div class="team-info">
+                  <h4>${m.home.name}</h4>
+                  <span>${m.home.conf}</span>
+                </div>
+              </div>
+              <div class="vs-divider">VS</div>
+              <div class="team-side away">
+                <span class="team-flag">${m.away.flag}</span>
+                <div class="team-info">
+                  <h4>${m.away.name}</h4>
+                  <span>${m.away.conf}</span>
+                </div>
+              </div>
+            </div>
+            <div class="match-meta">
+              <span>📍 ${stadium.city}</span>
+              <span>🏟 ${stadium.name}</span>
+            </div>
+            <div class="rivalry-badge ${rClass}">
+              🔥 ${rLabel} — ${m.rivalry.title}
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTabs();
+      const firstDate = WC2026.getAllDates()[0];
+      if (firstDate) filterDate(firstDate, document.querySelector('.date-tab'));
+    });
+  </script>
+</body>
+</html>
