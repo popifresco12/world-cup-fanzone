@@ -121,15 +121,15 @@ const WC2026 = {
       stadium: "hardrock",
       rivalry: {
         level: 3,
-        title: "Debt Unpaid",
-        summary: "Argentina ended Ghana's fairytale 2010 World Cup run with a controversial handball by Luis Suárez (Uruguay) in the quarterfinal. Ghana fans still carry grudges against South American teams. The 2022 World Cup saw Argentina eliminate African opposition again.",
+        title: "Continental Pride",
+        summary: "Argentina and Ghana have only met twice in World Cups — both in group stages (2006 draw, 2010 Argentina 1-0 win). The tension is ambient: Ghana is Africa's most decorated World Cup nation, while Argentina is South America's footballing aristocracy. Ghanaian fans still resent the 2010 Suárez handball (Uruguay), and Argentina's 2022 triumph over African teams keeps the continental rivalry alive.",
         wars: [],
-        political: "Argentina was one of the few South American nations to criticize European colonialism in Africa during the 1970s Non-Aligned Movement.",
+        political: "Both nations were pillars of the Non-Aligned Movement. Kwame Nkrumah (Ghana) and Che Guevara (Argentina-born) were ideological allies in the 1960s. Argentina supported African decolonization at the UN.",
         football_history: [
-          { year: 2010, event: "WC QF: Uruguay vs Ghana (Suárez handball) — Argentina went on to win the tournament" },
-          { year: 2009, event: "Friendly: Argentina 2-0 Ghana" },
+          { year: 2010, event: "WC Group: Argentina 1-0 Ghana (Higuaín goal)" },
+          { year: 2006, event: "WC Group: Argentina 0-0 Ghana" },
         ],
-        fun_fact: "Ghanaian fans still chant 'Justice for 2010' at any South American team."
+        fun_fact: "Ghana was the first African nation to reach a World Cup quarterfinal (2010). Argentina was the first South American nation to win three World Cups (2022)."
       }
     },
     {
