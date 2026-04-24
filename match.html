@@ -72,25 +72,29 @@
 
     function renderMatchHero() {
       const stadium = WC2026.stadiums[match.stadium];
+      const isTBD = match.home.code === 'TBD' || match.away.code === 'TBD';
       const kickoff = new Date(`${match.date}T${match.time}:00`);
       const fanzone = new Date(kickoff.getTime() - 4 * 60 * 60 * 1000);
+      const stageLabels = {'R32':'Round of 32','R16':'Round of 16','QF':'Quarter-Final','SF':'Semi-Final','3P':'Third Place','F':'Final'};
+      const stageLabel = stageLabels[match.group] || `Group ${match.group}`;
       document.getElementById('matchHero').innerHTML = `
         <a href="index.html" class="back-link">← <span data-i18n="match_detail.back">All Matches</span></a>
         <div class="match-hero-teams">
           <div class="match-hero-team">
             <span class="flag">${match.home.flag}</span>
             <h2>${match.home.name}</h2>
-            <span class="conf">${match.home.conf} · FIFA Rank #${match.home.rank}</span>
+            ${!isTBD ? `<span class="conf">${match.home.conf} · FIFA Rank #${match.home.rank}</span>` : '<span class="conf">TBD</span>'}
           </div>
           <div class="match-hero-vs">VS</div>
           <div class="match-hero-team">
             <span class="flag">${match.away.flag}</span>
             <h2>${match.away.name}</h2>
-            <span class="conf">${match.away.conf} · FIFA Rank #${match.away.rank}</span>
+            ${!isTBD ? `<span class="conf">${match.away.conf} · FIFA Rank #${match.away.rank}</span>` : '<span class="conf">TBD</span>'}
           </div>
         </div>
         <div class="match-hero-info">
           <span>📅 ${new Date(match.date + 'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</span>
+          <span>🏆 ${stageLabel}</span>
           <span>⚽ ${match.time} ${match.timezone}</span>
           <span>🏟 ${stadium.name}, ${stadium.city}</span>
           <span>👥 ${stadium.capacity.toLocaleString()} capacity</span>
